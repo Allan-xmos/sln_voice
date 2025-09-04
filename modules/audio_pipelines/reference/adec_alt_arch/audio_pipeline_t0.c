@@ -93,8 +93,7 @@ static void stage_vnr_and_ic(frame_data_t *frame_data)
     vnr_pred_state_t *vnr_pred_state = &vnr_pred_stage_state.vnr_pred_state;
     ic_calc_vnr_pred(&ic_stage_state.state, &vnr_pred_state->input_vnr_pred, &vnr_pred_state->output_vnr_pred);
 
-    float_s32_t agc_vnr_threshold = f32_to_float_s32(VNR_AGC_THRESHOLD);
-    frame_data->vnr_pred_flag = float_s32_gt(vnr_pred_stage_state.vnr_pred_state.output_vnr_pred, agc_vnr_threshold);
+    frame_data->vnr_pred_flag = vnr_pred_stage_state.vnr_pred_state.input_vnr_pred;
 
     ic_adapt(&ic_stage_state.state, vnr_pred_stage_state.vnr_pred_state.input_vnr_pred);
 
@@ -127,6 +126,7 @@ static void stage_agc(frame_data_t *frame_data)
     agc_stage_state.md.vnr_flag = frame_data->vnr_pred_flag;
     agc_stage_state.md.aec_ref_power = frame_data->max_ref_energy;
     agc_stage_state.md.aec_corr_factor = frame_data->aec_corr_factor;
+    agc_stage_state.md.ref_active_flag = frame_data->ref_active_flag;
 
     agc_process_frame(
             &agc_stage_state.state,
@@ -143,10 +143,12 @@ static void initialize_pipeline_stages(void)
 
     ns_init(&ns_stage_state.state);
 
-    agc_init(&agc_stage_state.state, &AGC_PROFILE_ASR);
+    agc_init(&agc_stage_state.state, &AGC_PROFILE_XCV_COMMS);
 
     agc_stage_state.md.aec_ref_power = AGC_META_DATA_NO_AEC;
     agc_stage_state.md.aec_corr_factor = AGC_META_DATA_NO_AEC;
+    agc_stage_state.md.vnr_flag = AGC_META_DATA_NO_VNR;
+    agc_stage_state.md.ref_active_flag = AGC_META_DATA_NO_REF;
 }
 
 void audio_pipeline_init(

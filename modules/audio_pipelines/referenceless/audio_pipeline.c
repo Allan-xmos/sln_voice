@@ -156,7 +156,7 @@ static void stage_agc(frame_data_t *frame_data)
     int32_t DWORD_ALIGNED agc_output[appconfAUDIO_PIPELINE_FRAME_ADVANCE];
     configASSERT(AGC_FRAME_ADVANCE == appconfAUDIO_PIPELINE_FRAME_ADVANCE);
 
-    agc_stage_state.md.vnr_flag = float_s32_gt(frame_data->output_vnr_pred, f32_to_float_s32(VNR_AGC_THRESHOLD));
+    agc_stage_state.md.vnr_flag = frame_data->input_vnr_pred;
 
     agc_process_frame(
             &agc_stage_state.state,
