@@ -88,7 +88,7 @@ static void stage_vnr_and_ic(frame_data_t *frame_data)
 
     frame_data->vnr_pred_flag = vnr_pred_stage_state.vnr_pred_state.input_vnr_pred;
 
-    ic_adapt(&ic_stage_state.state, vnr_pred_stage_state.vnr_pred_state.input_vnr_pred);
+    ic_adapt(&ic_stage_state.state, ic_stage_state.state.vnr_pred_state.input_vnr_pred);
 
     /* Intentionally ignoring comms ch from here on out */
     memcpy(frame_data->samples, ic_output, appconfAUDIO_PIPELINE_FRAME_ADVANCE * sizeof(int32_t));

@@ -123,7 +123,7 @@ static void stage_vnr_and_ic(frame_data_t *frame_data)
     vnr_pred_state_t *vnr_pred_state = &vnr_pred_stage_state.vnr_pred_state;
     ic_calc_vnr_pred(&ic_stage_state.state, &vnr_pred_state->input_vnr_pred, &vnr_pred_state->output_vnr_pred);
 
-    ic_adapt(&ic_stage_state.state, vnr_pred_stage_state.vnr_pred_state.input_vnr_pred);
+    ic_adapt(&ic_stage_state.state, ic_stage_state.state.vnr_pred_state.input_vnr_pred);
 
     frame_data->input_vnr_pred = vnr_pred_stage_state.vnr_pred_state.input_vnr_pred;
     frame_data->output_vnr_pred = vnr_pred_stage_state.vnr_pred_state.output_vnr_pred;
