@@ -21,6 +21,8 @@
 #include "audio_pipeline.h"
 #include "audio_pipeline_dsp.h"
 
+#define REF_ACTIVE_THRESHOLD_dB (-60) // Reference input level above which it is considered active
+
 #if appconfAUDIO_PIPELINE_FRAME_ADVANCE != 240
 #error This pipeline is only configured for 240 frame advance
 #endif
@@ -112,6 +114,13 @@ static void stage_aec(frame_data_t *frame_data)
 #if appconfAUDIO_PIPELINE_SKIP_AEC
 #else
     int32_t DWORD_ALIGNED stage1_output[AEC_MAX_Y_CHANNELS][appconfAUDIO_PIPELINE_FRAME_ADVANCE];
+
+    /** Detect if there's activity on the reference channels*/
+    int32_t ref_active_flag;
+    ref_active_flag = aec_detect_input_activity(frame_data->aec_reference_audio_samples, 
+        f64_to_float_s32(pow(10, REF_ACTIVE_THRESHOLD_dB/20.0)), 
+        aec_state.aec_main_state.shared_state->num_x_channels);
+    aec_state.aec_main_state.shared_state->ref_active_flag = ref_active_flag;
 
     aec_process_frame_1thread(
             &aec_state.aec_main_state,

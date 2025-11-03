@@ -75,6 +75,7 @@ void stage_1_process_frame(stage_1_state_t *state, int32_t (*output_frame)[AP_FR
 
     /** Detect if there's activity on the reference channels*/
     *ref_active_flag = aec_detect_input_activity(input_x, state->ref_active_threshold, state->aec_main_state.shared_state->num_x_channels);
+    state->aec_main_state.shared_state->ref_active_flag = *ref_active_flag;
 
     /** AEC*/
     aec_process_frame_1thread(&state->aec_main_state, &state->aec_shadow_state, output_frame, NULL, input_y, input_x);

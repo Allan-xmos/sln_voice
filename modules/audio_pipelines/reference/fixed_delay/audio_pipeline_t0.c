@@ -87,7 +87,7 @@ static void stage_vnr_and_ic(frame_data_t *frame_data)
 
     frame_data->vnr_pred_flag = vnr_pred_stage_state.vnr_pred_state.input_vnr_pred;
 
-    ic_adapt(&ic_stage_state.state, ic_stage_state.state.vnr_pred_state.input_vnr_pred);
+    ic_adapt(&ic_stage_state.state);
 
     /* Intentionally ignoring comms ch from here on out */
     memcpy(frame_data->samples, ic_output, appconfAUDIO_PIPELINE_FRAME_ADVANCE * sizeof(int32_t));
@@ -136,8 +136,7 @@ static void initialize_pipeline_stages(void)
     ns_init(&ns_stage_state.state);
 
     agc_init(&agc_stage_state.state, &AGC_PROFILE_XCV_COMMS);
-    agc_stage_state.md.aec_ref_power = AGC_META_DATA_NO_AEC;
-    agc_stage_state.md.aec_corr_factor = AGC_META_DATA_NO_AEC;
+    agc_stage_state.md = agc_meta_data_init();
 }
 
 void audio_pipeline_init(
