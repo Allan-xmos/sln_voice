@@ -15,7 +15,7 @@
 
 /* Library headers */
 #include "generic_pipeline.h"
-#include "adec_api.h"
+#include "adec.h"
 
 /* App headers */
 #include "app_conf.h"
@@ -87,11 +87,13 @@ static void initialize_pipeline_stages(void)
     aec_non_de_mode_conf.num_x_channels = 2;
     aec_non_de_mode_conf.num_main_filt_phases = 15;
     aec_non_de_mode_conf.num_shadow_filt_phases = AEC_SHADOW_FILTER_PHASES;
+    aec_non_de_mode_conf.tdist = &aec_tdist_chans2_threads1;
 
     aec_de_mode_conf.num_y_channels = 1;
     aec_de_mode_conf.num_x_channels = 1;
     aec_de_mode_conf.num_main_filt_phases = 30;
     aec_de_mode_conf.num_shadow_filt_phases = 0;
+    aec_de_mode_conf.tdist = &aec_tdist_chans2_threads1;
 
     // Disable ADEC's automatic mode. We only want to estimate and correct for the delay at startup
     adec_conf.bypass = 1; // Bypass automatic DE correction
