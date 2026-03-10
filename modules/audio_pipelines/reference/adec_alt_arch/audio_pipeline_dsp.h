@@ -10,23 +10,15 @@
 /* Pipeline config */
 #define AP_MAX_Y_CHANNELS (2)
 #define AP_MAX_X_CHANNELS (2)
-#define AP_FRAME_ADVANCE (240)
 
 /* AEC config */
 #define AEC_MAIN_FILTER_PHASES    (10)
 #define AEC_SHADOW_FILTER_PHASES    (5)
 
-/* Delay buffer config */
-#define MAX_DELAY_BUF_CHANNELS (2)
-#define DELAY_BUF_MAX_DELAY_MS                ( 150 )
-#define DELAY_BUF_MAX_DELAY_SAMPLES           ( 16000*DELAY_BUF_MAX_DELAY_MS/1000 )
-
 #include "aec.h"
 #include "agc.h"
 #include "ic.h"
 #include "ns.h"
-#include "vnr_features_api.h"
-#include "vnr_inference_api.h"
 #include "adec.h"
 
 /* Note: Changing the order here will effect the channel order for
@@ -38,7 +30,7 @@ typedef struct {
     int32_t mic_samples_passthrough[appconfAUDIO_PIPELINE_CHANNELS][appconfAUDIO_PIPELINE_FRAME_ADVANCE];
 
     /* Below is additional context needed by other stages on a per frame basis */
-    int32_t vnr_pred_flag;
+    float_s32_t vnr_pred_flag;
     float_s32_t max_ref_energy;
     float_s32_t aec_corr_factor;
     int32_t ref_active_flag;
@@ -47,10 +39,6 @@ typedef struct {
 typedef struct ic_stage_ctx {
     ic_state_t DWORD_ALIGNED state;
 } ic_stage_ctx_t;
-
-typedef struct vnr_pred_stage_ctx {
-    vnr_pred_state_t vnr_pred_state; 
-} vnr_pred_stage_ctx_t;
 
 typedef struct ns_stage_ctx {
     ns_state_t DWORD_ALIGNED state;

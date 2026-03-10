@@ -43,7 +43,7 @@ static void *audio_pipeline_input_i(void *input_app_data)
                        4,
                        appconfAUDIO_PIPELINE_FRAME_ADVANCE);
 
-    frame_data->vnr_pred_flag = 0;
+    frame_data->vnr_pred_flag = AGC_META_DATA_NO_VNR;
 
     memcpy(frame_data->samples, frame_data->mic_samples_passthrough, sizeof(frame_data->samples));
 
@@ -113,9 +113,8 @@ static void stage_aec(frame_data_t *frame_data)
 #else
     int32_t DWORD_ALIGNED stage1_output[AEC_MAX_Y_CHANNELS][appconfAUDIO_PIPELINE_FRAME_ADVANCE];
 
-    aec_process_frame_1thread(
+    aec_process_frame(
             &aec_state.aec_state,
-            NULL,
             stage1_output,
             NULL,
             frame_data->samples,

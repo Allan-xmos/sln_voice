@@ -8,12 +8,10 @@
 #include "FreeRTOS.h"
 #include "stream_buffer.h"
 #include "app_conf.h"
-#include <stdint.h>
 
 /* Pipeline config */
 #define AP_MAX_Y_CHANNELS (2)
 #define AP_MAX_X_CHANNELS (2)
-#define AP_FRAME_ADVANCE (240)
 
 /* AEC config */
 #define AEC_MAIN_FILTER_PHASES    (10)
@@ -28,8 +26,6 @@
 #include "agc.h"
 #include "ic.h"
 #include "ns.h"
-#include "vnr_features_api.h"
-#include "vnr_inference_api.h"
 
 
 /* Note: Changing the order here will effect the channel order for
@@ -41,7 +37,7 @@ typedef struct {
     int32_t mic_samples_passthrough[appconfAUDIO_PIPELINE_CHANNELS][appconfAUDIO_PIPELINE_FRAME_ADVANCE];
 
     /* Below is additional context needed by other stages on a per frame basis */
-    int32_t vnr_pred_flag;
+    float_s32_t vnr_pred_flag;
     float_s32_t max_ref_energy;
     float_s32_t aec_corr_factor;
     int32_t ref_active_flag;
@@ -58,10 +54,6 @@ typedef struct aec_ctx {
 typedef struct ic_stage_ctx {
     ic_state_t DWORD_ALIGNED state;
 } ic_stage_ctx_t;
-
-typedef struct vnr_pred_stage_ctx {
-    vnr_pred_state_t vnr_pred_state;
-} vnr_pred_stage_ctx_t;
 
 typedef struct ns_stage_ctx {
     ns_state_t DWORD_ALIGNED state;
@@ -84,13 +76,5 @@ typedef struct agc_stage_ctx {
 #define AP_INPUT_SAMPLES_MIC_DELAY_SIZE_CUR_FRAME_WORDS ( AP_INPUT_SAMPLES_MIC_DELAY_CHAN_CNT * appconfAUDIO_PIPELINE_FRAME_ADVANCE)
 #define AP_INPUT_SAMPLES_MIC_DELAY_CUR_FRAME_BYTES      ( AP_INPUT_SAMPLES_MIC_DELAY_SIZE_CUR_FRAME_WORDS * sizeof(int32_t))
 #define AP_INPUT_SAMPLES_MIC_DELAY_BUF_SIZE_BYTES       ( AP_INPUT_SAMPLES_MIC_DELAY_SIZE_CHAN * sizeof(int32_t) )
-
-void aec_process_frame_1thread(
-        aec_state_t *main_state,
-        aec_state_t *shadow_state,
-        int32_t (*output_main)[AEC_FRAME_ADVANCE],
-        int32_t (*output_shadow)[AEC_FRAME_ADVANCE],
-        const int32_t (*y_data)[AEC_FRAME_ADVANCE],
-        const int32_t (*x_data)[AEC_FRAME_ADVANCE]);
 
 #endif /* AUDIO_PIPELINE_DSP_H_ */
