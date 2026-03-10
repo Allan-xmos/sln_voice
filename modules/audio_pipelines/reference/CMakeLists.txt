@@ -25,8 +25,7 @@ target_link_libraries(fixed_delay_aec_ic_ns_agc_2mic_2ref
         lib_voice::agc
         lib_voice::ic
         lib_voice::ns
-        lib_voice::vnr::features
-        lib_voice::vnr::inference
+        lib_voice::vnr
 )
 
 ##******************************************
@@ -40,7 +39,6 @@ target_sources(adec_aec_ic_ns_agc_2mic_2ref
     INTERFACE
         ${CMAKE_CURRENT_LIST_DIR}/adec/audio_pipeline_t0.c
         ${CMAKE_CURRENT_LIST_DIR}/adec/audio_pipeline_t1.c
-        ${CMAKE_CURRENT_LIST_DIR}/adec/stage1/delay_buffer.c
         ${CMAKE_CURRENT_LIST_DIR}/adec/stage1/stage_1.c
         ${CMAKE_CURRENT_LIST_DIR}/adec/aec/aec_process_frame_1thread.c
 )
@@ -61,8 +59,8 @@ target_link_libraries(adec_aec_ic_ns_agc_2mic_2ref
         lib_voice::agc
         lib_voice::ic
         lib_voice::ns
-        lib_voice::vnr::features
-        lib_voice::vnr::inference
+        lib_voice::stage1
+        lib_voice::vnr
 )
 
 ##******************************************
@@ -76,7 +74,6 @@ target_sources(adec_altarch_aec_ic_ns_agc_2mic_2ref
     INTERFACE
         ${CMAKE_CURRENT_LIST_DIR}/adec_alt_arch/audio_pipeline_t0.c
         ${CMAKE_CURRENT_LIST_DIR}/adec_alt_arch/audio_pipeline_t1.c
-        ${CMAKE_CURRENT_LIST_DIR}/adec_alt_arch/stage1/delay_buffer.c
         ${CMAKE_CURRENT_LIST_DIR}/adec_alt_arch/stage1/stage_1.c
         ${CMAKE_CURRENT_LIST_DIR}/adec_alt_arch/aec/aec_process_frame_1thread.c
 )
@@ -97,8 +94,8 @@ target_link_libraries(adec_altarch_aec_ic_ns_agc_2mic_2ref
         lib_voice::agc
         lib_voice::ic
         lib_voice::ns
-        lib_voice::vnr::features
-        lib_voice::vnr::inference
+        lib_voice::stage1
+        lib_voice::vnr
 )
 
 ##******************************************

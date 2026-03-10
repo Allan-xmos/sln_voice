@@ -24,8 +24,7 @@ target_link_libraries(ic_ns_agc_2mic_2ref
         lib_voice::agc
         lib_voice::ic
         lib_voice::ns
-        lib_voice::vnr::features
-        lib_voice::vnr::inference
+        lib_voice::vnr
 )
 
 ##*********************************************

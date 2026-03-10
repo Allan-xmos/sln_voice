@@ -130,6 +130,7 @@ pipeline {
                                 expression { params.NIGHTLY_TEST_ONLY == true }
                             }
                             steps {
+                                catchError(stageResult: 'FAILURE') {
                                 withTools(params.TOOLS_VERSION) {
                                     withVenv {
                                         script {
@@ -139,6 +140,7 @@ pipeline {
                                             sh "pytest test/sample_rate_conversion/test_sample_rate_conversion.py --wav_file test/sample_rate_conversion/test_output/sample_rate_conversion_output.wav --wav_duration 10"
                                         }
                                     }
+                                }
                                 }
                             }
                         }

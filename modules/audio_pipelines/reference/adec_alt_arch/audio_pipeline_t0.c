@@ -127,6 +127,7 @@ static void stage_agc(frame_data_t *frame_data)
     agc_stage_state.md.vnr_flag = vnr_pred_stage_state.vnr_pred_state.input_vnr_pred;
     agc_stage_state.md.aec_ref_power = frame_data->max_ref_energy;
     agc_stage_state.md.aec_corr_factor = frame_data->aec_corr_factor;
+    agc_stage_state.md.ref_active_flag = frame_data->ref_active_flag;
 
     agc_process_frame(
             &agc_stage_state.state,
@@ -147,6 +148,7 @@ static void initialize_pipeline_stages(void)
 
     agc_stage_state.md.aec_ref_power = AGC_META_DATA_NO_AEC;
     agc_stage_state.md.aec_corr_factor = AGC_META_DATA_NO_AEC;
+    agc_stage_state.md.ref_active_flag = AGC_META_DATA_NO_REF;
 }
 
 void audio_pipeline_init(
