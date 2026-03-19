@@ -6,11 +6,11 @@ modules/core/modules/otpinfo
 modules/core/modules/random
 modules/core/modules/trycatch
 modules/rtos/modules/FreeRTOS
+modules/core/doc/shared/legal.rst
 
 #voice 
-modules/voice/doc/getting_started/index.rst
-modules/voice/doc/user_guide/index.rst
-modules/voice/examples/bare-metal/*
+modules/voice/examples/*
+modules/voice/tests
 
 # io
 modules/io/modules/xud

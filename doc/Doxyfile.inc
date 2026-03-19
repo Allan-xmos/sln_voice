@@ -14,12 +14,13 @@ PREDEFINED += C_API= MA_C_API= C_API_START= C_API_END= EXTERN_C=
 INPUT += ../modules/core/modules/xcore_math/lib_xcore_math/lib_xcore_math/api ../modules/core/modules/xcore_math/lib_xcore_math/doc/rst/src/reference
 
 # Voice DSP library APIs
-INPUT += ../modules/voice/modules/lib_aec/api ../modules/voice/examples/bare-metal/shared_src/aec/
-INPUT += ../modules/voice/modules/lib_ns/api
-INPUT += ../modules/voice/modules/lib_agc/api
-INPUT += ../modules/voice/modules/lib_adec/api
-INPUT += ../modules/voice/modules/lib_ic/api
-INPUT += ../modules/voice/modules/lib_vnr/api/common ../modules/voice/modules/lib_vnr/api/features ../modules/voice/modules/lib_vnr/api/inference
+INPUT += ../modules/voice/lib_voice/api/aec
+INPUT += ../modules/voice/lib_voice/api/ns
+INPUT += ../modules/voice/lib_voice/api/agc
+INPUT += ../modules/voice/lib_voice/api/adec
+INPUT += ../modules/voice/lib_voice/api/ic
+INPUT += ../modules/voice/lib_voice/api/vnr
+INPUT += ../modules/voice/lib_voice/api/stage1
 
 # RTOS driver APIs
 INPUT += ../modules/rtos/modules/drivers 
