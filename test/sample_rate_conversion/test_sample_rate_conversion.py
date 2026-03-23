@@ -15,7 +15,7 @@ def test_48k_output(wav_file, wav_duration):
     wave_file = sf.SoundFile(wav_file)
     signal = wave_file.read()
     for ch in range(2):
-        THDN, freq = THDN_and_freq(signal[:, ch], TEST_SAMPLE_RATE)
+        THDN, freq = THDN_and_freq(signal[:, ch], TEST_SAMPLE_RATE, fund_freq=TEST_FREQ[ch])
         assert isclose(TEST_FREQ[ch], freq, rel_tol=(1 / (2 * wav_duration)))
 
         THDN_max = (
