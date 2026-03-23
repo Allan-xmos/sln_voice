@@ -124,6 +124,7 @@ static void stage_aec(frame_data_t *frame_data)
                                     frame_data->aec_reference_audio_samples,
                                     aec_state.aec_state.shared_state.num_x_channels);
     frame_data->aec_corr_factor = aec_calc_corr_factor(&aec_state.aec_state.main_state, 0);
+    frame_data->ref_active_flag = aec_state.aec_state.shared_state.ref_active_flag;
     memcpy(frame_data->samples, stage1_output, AEC_MAX_Y_CHANNELS * appconfAUDIO_PIPELINE_FRAME_ADVANCE * sizeof(int32_t));
 #endif
 }

@@ -27,10 +27,6 @@ endif()
 
 query_tools_version()
 foreach(FFVA_AP ${FFVA_PIPELINES_UA})
-    set(FFVA_UA_AP_COMPILE_DEFINITIONS ${FFVA_UA_COMPILE_DEFINITIONS})
-    if(FFVA_AP STREQUAL "adec_altarch")
-        list(APPEND FFVA_UA_AP_COMPILE_DEFINITIONS ALT_ARCH_MODE=1)
-    endif()
 
     #**********************
     # Tile Targets
@@ -41,7 +37,7 @@ foreach(FFVA_AP ${FFVA_PIPELINES_UA})
     target_include_directories(${TARGET_NAME} PUBLIC ${APP_INCLUDES})
     target_compile_definitions(${TARGET_NAME}
         PUBLIC
-            ${FFVA_UA_AP_COMPILE_DEFINITIONS}
+            ${FFVA_UA_COMPILE_DEFINITIONS}
             THIS_XCORE_TILE=0
     )
     target_compile_options(${TARGET_NAME} PRIVATE ${APP_COMPILER_FLAGS})
@@ -60,7 +56,7 @@ foreach(FFVA_AP ${FFVA_PIPELINES_UA})
     target_include_directories(${TARGET_NAME} PUBLIC ${APP_INCLUDES})
     target_compile_definitions(${TARGET_NAME}
         PUBLIC
-            ${FFVA_UA_AP_COMPILE_DEFINITIONS}
+            ${FFVA_UA_COMPILE_DEFINITIONS}
             THIS_XCORE_TILE=1
     )
     target_compile_options(${TARGET_NAME} PRIVATE ${APP_COMPILER_FLAGS})

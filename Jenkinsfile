@@ -1,4 +1,4 @@
-@Library('xmos_jenkins_shared_library@v0.48.0') _
+@Library('xmos_jenkins_shared_library@v0.49.0') _
 
 getApproval()
 
@@ -283,9 +283,7 @@ pipeline {
                     steps {
                         checkout scm
                         sh 'git submodule update --init --recursive --depth 1 --jobs \$(nproc)'
-                        warnError("Docs") {
-                            buildDocs(archiveZipOnly: true)
-                        } // warnError("Docs")
+                        buildDocs(archiveZipOnly: true, strict: false)
                     } // steps
                     post {
                         cleanup {
@@ -293,8 +291,7 @@ pipeline {
                         }
                     }
                 } // stage('Build Documentation')
-
-            }
-        }
+            } // parallel
+        } // stage('Build and Docs')
     }
 }
