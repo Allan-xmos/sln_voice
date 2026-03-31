@@ -276,21 +276,40 @@ pipeline {
                         }
                     }
                 }
-                stage('Build Documentation') {
+                stage('Repo checks and docs')
+                {
                     agent {
                         label 'documentation&&docker'
                     }
-                    steps {
-                        checkout scm
-                        sh 'git submodule update --init --recursive --depth 1 --jobs \$(nproc)'
-                        buildDocs(archiveZipOnly: true, strict: false)
-                    } // steps
-                    post {
-                        cleanup {
-                            xcoreCleanSandbox()
-                        }
+                    stages{
+                        stage("Repo checks") {
+                            steps {
+                                
+                                dir(REPO){
+                                    checkoutScmShallow()
+                                    sh 'git submodule update --init --recursive --depth 1 --jobs \$(nproc)'
+                                }
+                                warnError("Repo checks failed") {
+                                    runRepoChecks("${WORKSPACE}/${REPO}")
+                                }
+                            }
+                        } // Repo checks
+                        stage('Build Documentation') {
+                            steps {
+                                dir(REPO){
+                                    // checkout scm
+                                    // sh 'git submodule update --init --recursive --depth 1 --jobs \$(nproc)'
+                                    buildDocs(archiveZipOnly: true, strict: false)
+                                }
+                            } // steps
+                            post {
+                                cleanup {
+                                    xcoreCleanSandbox()
+                                }
+                            }
+                        } // stage('Build Documentation')
                     }
-                } // stage('Build Documentation')
+                }
             } // parallel
         } // stage('Build and Docs')
     }
