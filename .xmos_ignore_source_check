@@ -2,3 +2,15 @@
 /thirdparty/
 /ThirdParty/
 /Cyberon/
+
+./examples/asrc_demo/src/usb/tusb_config.h
+./examples/asrc_demo/src/usb/usb_audio.c
+./examples/asrc_demo/src/usb/usb_descriptors.c
+./examples/asrc_demo/src/usb/usb_dfu.c
+
+./examples/ffva/src/usb/tusb_config.h
+./examples/ffva/src/usb/usb_audio.c
+./examples/ffva/src/usb/usb_descriptors.c
+./examples/ffva/src/usb/usb_dfu.c
+
+./modules/asr/intent_handler/audio_response/dr_wav.h
