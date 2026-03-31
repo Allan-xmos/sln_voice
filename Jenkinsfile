@@ -1,4 +1,4 @@
-@Library('xmos_jenkins_shared_library@v0.38.0') _
+@Library('xmos_jenkins_shared_library@v0.49.0') _
 
 getApproval()
 
@@ -20,7 +20,7 @@ pipeline {
         )
         string(
             name: 'XMOSDOC_VERSION',
-            defaultValue: 'v6.3.1',
+            defaultValue: 'v8.0.1',
             description: 'The xmosdoc version'
         )
         booleanParam(name: 'NIGHTLY_TEST_ONLY',
@@ -130,6 +130,7 @@ pipeline {
                                 expression { params.NIGHTLY_TEST_ONLY == true }
                             }
                             steps {
+                                catchError(stageResult: 'FAILURE') {
                                 withTools(params.TOOLS_VERSION) {
                                     withVenv {
                                         script {
@@ -139,6 +140,7 @@ pipeline {
                                             sh "pytest test/sample_rate_conversion/test_sample_rate_conversion.py --wav_file test/sample_rate_conversion/test_output/sample_rate_conversion_output.wav --wav_duration 10"
                                         }
                                     }
+                                }
                                 }
                             }
                         }
@@ -281,9 +283,7 @@ pipeline {
                     steps {
                         checkout scm
                         sh 'git submodule update --init --recursive --depth 1 --jobs \$(nproc)'
-                        warnError("Docs") {
-                            buildDocs(archiveZipOnly: true)
-                        } // warnError("Docs")
+                        buildDocs(archiveZipOnly: true, strict: false)
                     } // steps
                     post {
                         cleanup {
@@ -291,8 +291,7 @@ pipeline {
                         }
                     }
                 } // stage('Build Documentation')
-
-            }
-        }
+            } // parallel
+        } // stage('Build and Docs')
     }
 }

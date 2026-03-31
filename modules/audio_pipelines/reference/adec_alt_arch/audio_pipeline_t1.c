@@ -15,13 +15,13 @@
 
 /* Library headers */
 #include "generic_pipeline.h"
-#include "adec_api.h"
+#include "adec.h"
 
 /* App headers */
 #include "app_conf.h"
 #include "audio_pipeline.h"
 #include "audio_pipeline_dsp.h"
-#include "stage_1.h"
+#include "stage1.h"
 
 #if appconfAUDIO_PIPELINE_FRAME_ADVANCE != 240
 #error This pipeline is only configured for 240 frame advance
@@ -29,7 +29,7 @@
 
 #if ON_TILE(1)
 // Stage1 - AEC, DE, ADEC
-static stage_1_state_t DWORD_ALIGNED stage_1_state;
+static stage1_t DWORD_ALIGNED stage_1_state;
 static aec_conf_t aec_de_mode_conf;
 static aec_conf_t aec_non_de_mode_conf;
 static adec_config_t adec_conf;
@@ -46,7 +46,7 @@ static void *audio_pipeline_input_i(void *input_app_data)
                        4,
                        appconfAUDIO_PIPELINE_FRAME_ADVANCE);
 
-    frame_data->vnr_pred_flag = 0;
+    frame_data->vnr_pred_flag = AGC_META_DATA_NO_VNR;
 
     memcpy(frame_data->samples, frame_data->mic_samples_passthrough, sizeof(frame_data->samples));
 
@@ -69,7 +69,7 @@ static void stage_aec(frame_data_t *frame_data)
 #else
     int32_t DWORD_ALIGNED stage_1_out[AEC_MAX_Y_CHANNELS][appconfAUDIO_PIPELINE_FRAME_ADVANCE];
 
-    stage_1_process_frame(&stage_1_state,
+    stage1_process_frame(&stage_1_state,
                           &stage_1_out[0],
                           &frame_data->max_ref_energy,
                           &frame_data->aec_corr_factor,
@@ -87,16 +87,18 @@ static void initialize_pipeline_stages(void)
     aec_non_de_mode_conf.num_x_channels = 2;
     aec_non_de_mode_conf.num_main_filt_phases = 15;
     aec_non_de_mode_conf.num_shadow_filt_phases = AEC_SHADOW_FILTER_PHASES;
+    aec_non_de_mode_conf.tdist = &aec_tdist_chans2_threads1;
 
     aec_de_mode_conf.num_y_channels = 1;
     aec_de_mode_conf.num_x_channels = 1;
     aec_de_mode_conf.num_main_filt_phases = 30;
     aec_de_mode_conf.num_shadow_filt_phases = 0;
+    aec_de_mode_conf.tdist = &aec_tdist_chans2_threads1;
 
     // Disable ADEC's automatic mode. We only want to estimate and correct for the delay at startup
     adec_conf.bypass = 1; // Bypass automatic DE correction
     adec_conf.force_de_cycle_trigger = 1; // Force a delay correction cycle, so that delay correction happens once after initialisation. Make sure this is set back to 0 after adec has requested a transition into DE mode once, to stop any further delay correction (automatic or forced) by ADEC
-    stage_1_init(&stage_1_state, &aec_de_mode_conf, &aec_non_de_mode_conf, &adec_conf);
+    stage1_init(&stage_1_state, &aec_de_mode_conf, &aec_non_de_mode_conf, &adec_conf);
 }
 
 void audio_pipeline_init(

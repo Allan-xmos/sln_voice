@@ -20,8 +20,8 @@ def test_results(log):
             min_detect = int(values[3])
             max_detect = int(values[4])
             if not min_detect <= detections:
-                errors.append(filename + " failed with " + str(detections) + " detections.")
+                errors.append(filename + " failed with " + str(detections) + " detections (expected at least " + str(min_detect) + ").")
             if not detections <= max_detect:
-                errors.append(filename + " failed with " + str(detections) + " detections.")
+                errors.append(filename + " failed with " + str(detections) + " detections (expected at most " + str(max_detect) + ").")
 
     assert not errors, "Test failed:\n{}".format("\n".join(errors))

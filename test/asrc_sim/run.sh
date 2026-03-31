@@ -5,7 +5,7 @@
 # pip install -r ./requirements.txt
 # ./run.sh
 
-cmake -S . -B ./build
+cmake -S . -B ./build -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 cmake --build build --target usb_in_i2s_out -j8
 cmake --build build --target i2s_in_usb_out -j8
 

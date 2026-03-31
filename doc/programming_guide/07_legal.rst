@@ -1,4 +1,4 @@
-.. _sln_voice_copyright:
+.. _sln_voice_prog_guide_legal:
 
 Licenses
 ========
