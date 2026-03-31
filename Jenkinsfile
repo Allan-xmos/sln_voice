@@ -287,9 +287,9 @@ pipeline {
                                 
                                 dir(REPO){
                                     checkoutScmShallow()
-                                    sh 'git submodule update --init --recursive --depth 1 --jobs \$(nproc)'
                                 }
                                 warnError("Repo checks failed") {
+                                    // run repo checks without submodules
                                     runRepoChecks("${WORKSPACE}/${REPO}")
                                 }
                             }
@@ -297,6 +297,7 @@ pipeline {
                         stage('Build Documentation') {
                             steps {
                                 dir(REPO){
+                                    sh 'git submodule update --init --recursive --depth 1 --jobs \$(nproc)'
                                     // checkout scm
                                     // sh 'git submodule update --init --recursive --depth 1 --jobs \$(nproc)'
                                     buildDocs(archiveZipOnly: true, strict: false)
