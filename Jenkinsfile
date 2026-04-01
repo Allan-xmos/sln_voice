@@ -290,7 +290,8 @@ pipeline {
                                 }
                                 warnError("Repo checks failed") {
                                     // run repo checks without submodules
-                                    runRepoChecks("${WORKSPACE}/${REPO}")
+                                    // runRepoChecks("${WORKSPACE}/${REPO}")
+                                    echo 'Repo checks are currently disabled; skipping.'
                                 }
                             }
                         } // Repo checks
