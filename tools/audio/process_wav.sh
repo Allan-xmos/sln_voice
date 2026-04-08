@@ -51,7 +51,7 @@ fi
 #  XVF3510 output channel order is: Ref L, Ref R, Mic 1, Mic 0, ASR, Comms
 #
 # NOTE: we are remixing the mics in [Mic 1, Mic 0] order to be consistent
-#       with the order used in fwk_voice testing
+#       with the order used in lib_voice testing
 if [[ $CHANNELS == 1 ]]; then # reference-less test vector
     # file only has 1 microphone channel
     if [[ $AEC == true ]]; then

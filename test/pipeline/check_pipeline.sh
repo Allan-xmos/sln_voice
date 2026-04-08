@@ -101,7 +101,7 @@ for ((j = 0; j < ${#INPUT_ARRAY[@]}; j += 1)); do
     #  XCORE-VOICE's input channel order is: Ref L, Ref R, Mic 0, Mic 1
     if [ "${AEC}" == "Y" ] ; then
         # NOTE: we are remixing the mics in [Mic 1, Mic 0] order to be consistent
-        #       with the order used in fwk_voice testing
+        #       with the order used in lib_voice testing
         REMIX_PATTERN="remix 3 4 1 2"
     else
         REMIX_PATTERN="remix 1 2"

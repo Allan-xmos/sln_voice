@@ -8,7 +8,7 @@ The default application performs as described in the :ref:`sln_voice_low_power_f
 are numerous compile time options that can be added to change the example design without requiring
 code changes. To change the options explained in the table below, add the desired configuration
 variables to the APP_COMPILE_DEFINITIONS CMake variable located in the example's CMake file
-`here <https://github.com/xmos/sln_voice/blob/develop/examples/low_power_ffd/low_power_ffd.cmake>`_.
+`here <https://github.com/xmos/sln_voice/blob/develop/examples/low_power_ffd/low_power_ffd_sensory.cmake>`_.
 
 If options are changed, the application firmware must be rebuilt.
 

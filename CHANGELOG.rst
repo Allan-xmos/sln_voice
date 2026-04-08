@@ -1,6 +1,16 @@
 XCORE-VOICE change log
 ======================
 
+2.4.0
+-----
+
+  * CHANGED: Replaced submodule fwk_voice with lib_voice v1.0.1.
+
+2.3.2
+-----
+
+  * CHANGED: Updated Cyberon DSpotter static library
+
 2.3.1
 -----
 

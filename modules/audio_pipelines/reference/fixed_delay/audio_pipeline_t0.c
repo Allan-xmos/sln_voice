@@ -1,4 +1,4 @@
-// Copyright 2022-2024 XMOS LIMITED.
+// Copyright 2022-2026 XMOS LIMITED.
 // This Software is subject to the terms of the XMOS Public Licence: Version 1.
 
 /* STD headers */
@@ -15,12 +15,10 @@
 
 /* Library headers */
 #include "generic_pipeline.h"
-#include "aec_api.h"
-#include "agc_api.h"
-#include "ic_api.h"
-#include "ns_api.h"
-#include "vnr_features_api.h"
-#include "vnr_inference_api.h"
+#include "aec.h"
+#include "agc.h"
+#include "ic.h"
+#include "ns.h"
 
 /* App headers */
 #include "app_conf.h"
@@ -31,11 +29,8 @@
 #error This pipeline is only configured for 240 frame advance
 #endif
 
-#define VNR_AGC_THRESHOLD (0.5)
-
 #if ON_TILE(0)
 static ic_stage_ctx_t DWORD_ALIGNED ic_stage_state = {};
-static vnr_pred_stage_ctx_t DWORD_ALIGNED vnr_pred_stage_state = {};
 static ns_stage_ctx_t DWORD_ALIGNED ns_stage_state = {};
 static agc_stage_ctx_t DWORD_ALIGNED agc_stage_state = {};
 
@@ -74,21 +69,16 @@ static int audio_pipeline_output_i(frame_data_t *frame_data,
 
 static void stage_vnr_and_ic(frame_data_t *frame_data)
 {
-#if appconfAUDIO_PIPELINE_SKIP_IC_AND_VAD
+#if appconfAUDIO_PIPELINE_SKIP_IC_AND_VNR
 #else
     int32_t DWORD_ALIGNED ic_output[appconfAUDIO_PIPELINE_FRAME_ADVANCE];
-    ic_filter(&ic_stage_state.state,
-              frame_data->samples[0],
-              frame_data->samples[1],
-              ic_output);
-
-    vnr_pred_state_t *vnr_pred_state = &vnr_pred_stage_state.vnr_pred_state;
-    ic_calc_vnr_pred(&ic_stage_state.state, &vnr_pred_state->input_vnr_pred, &vnr_pred_state->output_vnr_pred);
-
-    float_s32_t agc_vnr_threshold = f32_to_float_s32(VNR_AGC_THRESHOLD);
-    frame_data->vnr_pred_flag = float_s32_gt(vnr_pred_stage_state.vnr_pred_state.output_vnr_pred, agc_vnr_threshold);
-
-    ic_adapt(&ic_stage_state.state, vnr_pred_stage_state.vnr_pred_state.input_vnr_pred);
+    float_s32_t input_vnr_pred;
+    ic_process_frame(&ic_stage_state.state,
+                     frame_data->samples[0],
+                     frame_data->samples[1],
+                     ic_output,
+                     &input_vnr_pred);
+    frame_data->vnr_pred_flag = input_vnr_pred;
 
     /* Intentionally ignoring comms ch from here on out */
     memcpy(frame_data->samples, ic_output, appconfAUDIO_PIPELINE_FRAME_ADVANCE * sizeof(int32_t));
@@ -119,6 +109,7 @@ static void stage_agc(frame_data_t *frame_data)
     agc_stage_state.md.vnr_flag = frame_data->vnr_pred_flag;
     agc_stage_state.md.aec_ref_power = frame_data->max_ref_energy;
     agc_stage_state.md.aec_corr_factor = frame_data->aec_corr_factor;
+    agc_stage_state.md.ref_active_flag = frame_data->ref_active_flag;
 
     agc_process_frame(
             &agc_stage_state.state,
@@ -136,8 +127,7 @@ static void initialize_pipeline_stages(void)
     ns_init(&ns_stage_state.state);
 
     agc_init(&agc_stage_state.state, &AGC_PROFILE_ASR);
-    agc_stage_state.md.aec_ref_power = AGC_META_DATA_NO_AEC;
-    agc_stage_state.md.aec_corr_factor = AGC_META_DATA_NO_AEC;
+    agc_stage_state.md = agc_meta_data_init();
 }
 
 void audio_pipeline_init(
