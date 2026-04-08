@@ -1,6 +1,20 @@
-*******************************************
-XCORE:registered:-VOICE Solution Repository
-*******************************************
+:orphan:
+
+###########################################
+sln_voice: XCORE-VOICE Solution
+###########################################
+
+:vendor: XMOS
+:version: 2.4.0
+:scope: General Use
+:description: Voice processing solution
+:category: Voice
+:keywords: DSP
+:devices: xcore.ai
+
+*******
+Summary
+*******
 
 The XCORE-VOICE Solution consists of example designs and a C-based SDK for the development of audio front-end applications to support far-field voice use cases on the xcore.ai family of chips (XU316). Most of the XCORE-VOICE designs are based on FreeRTOS, leveraging the flexibility of the xcore.ai platform and providing designers with a familiar environment to customize and develop products. The only exception is the Microphone Aggregation example which runs on bare-metal; this architecture was selected as it suits high IO bandwidth and low latency bridging type applications.
 
