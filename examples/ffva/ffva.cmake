@@ -61,6 +61,7 @@ option(ENABLE_ALL_FFVA_PIPELINES  "Create all FFVA pipeline configurations"  OFF
 if(ENABLE_ALL_FFVA_PIPELINES)
     set(FFVA_PIPELINES_INT
         fixed_delay
+        fixed_delay_altarch
         adec
         adec_altarch
         empty
@@ -68,6 +69,7 @@ if(ENABLE_ALL_FFVA_PIPELINES)
 
     set(FFVA_PIPELINES_UA
         fixed_delay
+        fixed_delay_altarch
         adec
         adec_altarch
         empty
@@ -75,10 +77,12 @@ if(ENABLE_ALL_FFVA_PIPELINES)
 else()
     set(FFVA_PIPELINES_INT
         fixed_delay
+        fixed_delay_altarch
     )
 
     set(FFVA_PIPELINES_UA
         adec_altarch
+        fixed_delay_altarch
     )
 endif()
 
